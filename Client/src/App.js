@@ -16,7 +16,7 @@ require('dotenv').config()
 
 // Edit this to point to the app to the OpenTelemetry Collector address:
 // If running locally use http://localhost:55678/v1/trace
-const collectorURL = `http://34.69.255.184:55678/v1/trace`;
+const collectorURL = `${process.env.REACT_APP_OT_COLLECTOR}/v1/trace`;
 // const collectorURL = 'http://35.188.162.236/v1/trace';
 
 const webTracer = new WebTracerProvider({
