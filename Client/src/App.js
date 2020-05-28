@@ -89,7 +89,7 @@ function App() {
             for (var i = 0; i < response.data.length; i++) {
                 console.log(process.env.REACT_APP_VENDOR + response.data[i]);
                 // pushing into a list to be able to update the page once all the requests are finihsed
-                promises.push(axios.get(process.env.REACT_APP_VENDOR + response.data[i], {
+                promises.push(axios.get(`${process.env.REACT_APP_VENDOR}/${response.data[i]}`, {
                     params: {
                         ingredient: document.getElementById("searchbar").value
                     }

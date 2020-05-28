@@ -15,6 +15,6 @@ app.use("/vendorB", vendorB);
 app.use("/vendorC", vendorC);
 app.use("/vendorD", vendorD);
 
-app.listen(5000, 'localhost', () => {
+app.listen(5000, () => {
     console.log('Vendors app listening on port 5000!');
 });
