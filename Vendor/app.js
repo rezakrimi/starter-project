@@ -5,10 +5,10 @@ const cors = require('cors');
 app.use(cors());
 app.options('*', cors());
 
-const vendorA = require("../GVendorsServer/routes/vendorA");
-const vendorB = require("../GVendorsServer/routes/vendorB");
-const vendorC = require("../GVendorsServer/routes/vendorC");
-const vendorD = require("../GVendorsServer/routes/vendorD");
+const vendorA = require("./routes/vendorA");
+const vendorB = require("./routes/vendorB");
+const vendorC = require("./routes/vendorC");
+const vendorD = require("./routes/vendorD");
 
 app.use("/vendorA", vendorA);
 app.use("/vendorB", vendorB);
