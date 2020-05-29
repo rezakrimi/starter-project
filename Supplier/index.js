@@ -13,7 +13,9 @@ const cors = require('cors');
 app.use(cors());
 app.options('*', cors());
 
-const projectId = 'opentel-davidwitten-starter';
+require('dotenv').config({path:"../Client/.env"})
+
+const projectId = process.env.REACT_APP_GOOGLE_PROJECT_ID;
 
 // GOOGLE_APPLICATION_CREDENTIALS are expected by a dependency of this code
 // and not this code itself. Checking for existence here but not retaining (as not needed)
