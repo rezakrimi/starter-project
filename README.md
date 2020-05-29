@@ -32,5 +32,7 @@ service:
       receivers: [otlp, opencensus]
       exporters: [stackdriver]
 ```
+run `chmod 777 otelcontribcol_linux_amd64`
+
 Run the collector server using:
  `./otelcontribcol_linux_amd64 --config config.yaml --new-metrics --legacy-metrics=false`
