@@ -13,7 +13,7 @@ const cors = require('cors');
 app.use(cors());
 app.options('*', cors());
 
-const projectId = 'opentel-rezakarimi-starter';
+const projectId = 'opentel-davidwitten-starter';
 
 // GOOGLE_APPLICATION_CREDENTIALS are expected by a dependency of this code
 // and not this code itself. Checking for existence here but not retaining (as not needed)
@@ -89,57 +89,17 @@ app.get('/', (req, res) => {
     // Annotate our span to capture metadata about our operation
     span.addEvent('invoking work');
 
-    if (req.query.ingredient === "yeast") {
-        setTimeout((function () {
-            res.send(db[req.query.ingredient]);
-            span.end();
-            latency.next(2000);
-        }), 2000);
-    }
-    else if (req.query.ingredient === "flour") {
-        setTimeout((function () {
-            res.send(db[req.query.ingredient]);
-            span.end();
-            latency.next(3000);
-        }), 3000);
-    }
-    else if (req.query.ingredient === "butter") {
-        setTimeout((function () {
-            res.send(db[req.query.ingredient]);
-            span.end();
-            latency.next(1000);
-        }), 1000);
-    }
-    else if (req.query.ingredient === "egg") {
-        setTimeout((function () {
-            res.send(db[req.query.ingredient]);
-            span.end();
-            latency.next(5000);
-        }), 5000);
-    }
-    else if (req.query.ingredient === "milk") {
-        setTimeout((function () {
-            res.send(db[req.query.ingredient]);
-            span.end();
-            latency.next(1500);
-        }), 1500);
-    }
-    else if (req.query.ingredient === "sugar") {
-        setTimeout((function () {
-            res.send(db[req.query.ingredient]);
-            span.end();
-            latency.next(2500);
-        }), 2500);
-    }
-    else {
-        setTimeout((function () {
-            res.status(400);
-            res.send(db[req.query.ingredient]);
-            span.end();
-            latency.next(7000);
-        }), 7000);
-    }
+    let artificialLatency = Math.floor(Math.random() * 5) + 1; // 1, ... , 5 inclusive
+    artificialLatency *= 500; // 0.5 seconds to 2.5 seconds
+
+    setTimeout(function () {
+        res.send(db[req.query.ingredient]);
+        span.end();
+        latency.next(artificialLatency);
+    }, artificialLatency);
+
 });
+
 
 app.listen(8000, () => {
     console.log('Supplier app listening on port 8000!');
