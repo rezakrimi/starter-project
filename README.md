@@ -1,6 +1,10 @@
 
 # opentelemetry-testing
 ## Setting up the collector
+run `npm install` within each sub-directory.
+run `npm install` in the root directory.
+run `npm run start` in the root direcotry.
+## Setting up the collector
 create a directory for the collector and `cd` into.
 download the latest release from https://github.com/open-telemetry/opentelemetry-collector-contrib/releases
 example:  ```wget "https://github.com/open-telemetry/opentelemetry-collector-contrib/releases/download/v0.3.0/otelcontribcol_linux_amd64"```
