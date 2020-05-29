@@ -10,12 +10,9 @@ const Cdb = {
 
 router.get("/", (req, res, next) => {
     var result = {}
-    Object.entries(Cdb).forEach(([key, val]) => {
-        console.log(key)
-        if(req.query.ingredient === key){
-            result = val;
-        }
-    });
+    if (req.query.ingredient in Cdb) {
+        result = Cdb[req.query.ingredient];
+    }
     res.send({...result, vendor: "vendor C"});
 });
 

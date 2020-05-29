@@ -18,12 +18,9 @@ const Adb = {
 
 router.get("/", (req, res, next) => {
     var result = {}
-    Object.entries(Adb).forEach(([key, val]) => {
-        console.log(key)
-        if(req.query.ingredient === key){
-            result = val;
-        }
-    });
+    if (req.query.ingredient in Adb) {
+        result = Adb[req.query.ingredient];
+    }
     res.send({...result, vendor: "vendor A"});
 });
 

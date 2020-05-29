@@ -11,12 +11,9 @@ const Ddb = {
 
 router.get("/", (req, res, next) => {
     var result = {}
-    Object.entries(Ddb).forEach(([key, val]) => {
-        console.log(key)
-        if(req.query.ingredient === key){
-            result = val;
-        }
-    });
+    if (req.query.ingredient in Ddb) {
+        result = Ddb[req.query.ingredient];
+    }
     res.send({...result, vendor: "vendor D"});
 });
 

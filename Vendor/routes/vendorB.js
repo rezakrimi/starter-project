@@ -22,12 +22,9 @@ const Bdb = {
 
 router.get("/", (req, res, next) => {
     var result = {}
-    Object.entries(Bdb).forEach(([key, val]) => {
-        console.log(key)
-        if(req.query.ingredient === key){
-            result = val;
-        }
-    });
+    if (req.query.ingredient in Bdb) {
+        result = Bdb[req.query.ingredient];
+    }
     res.send({...result, vendor: "vendor B"});
 });
 
