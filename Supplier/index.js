@@ -6,6 +6,10 @@ const { globalStats, MeasureUnit, AggregationType } = require('@opencensus/core'
 const { StackdriverStatsExporter } = require('@opencensus/exporter-stackdriver');
 const { MeterProvider, MetricObservable } = require('@opentelemetry/metrics');
 const { MetricExporter } = require('@google-cloud/opentelemetry-cloud-monitoring-exporter');
+const { LogLevel } = require('@opentelemetry/core');
+const provider = new NodeTracerProvider({
+    logLevel: LogLevel.INFO
+  });
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -24,7 +28,7 @@ if (!projectId) {
     throw Error('Unable to proceed without a Project ID');
 }
 
-const provider = new NodeTracerProvider();
+
 
 // Initialize the exporter
 const te = new TraceExporter({ projectId: projectId });

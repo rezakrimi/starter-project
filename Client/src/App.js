@@ -4,7 +4,7 @@ import { Container, Col, Row, Form, Button, Card } from 'react-bootstrap';
 import axios from 'axios';
 import { tracing } from '@opencensus/web-instrumentation-zone';
 import { ConsoleSpanExporter, SimpleSpanProcessor } from '@opentelemetry/tracing';
-import { WebTracerProvider } from '@opentelemetry/web';
+import { WebTracerProvider, WebPluginEnabler } from '@opentelemetry/web';
 import { DocumentLoad } from '@opentelemetry/plugin-document-load';
 import { CollectorExporter } from '@opentelemetry/exporter-collector';
 const opentelemetry = require('@opentelemetry/api');
@@ -19,28 +19,30 @@ require('dotenv').config()
 const collectorURL = `${process.env.REACT_APP_OT_COLLECTOR}/v1/trace`;
 // const collectorURL = 'http://35.188.162.236/v1/trace';
 
-const webTracer = new WebTracerProvider({
-  plugins: [
-    new DocumentLoad(),
-  ],
+const webTracer = new WebTracerProvider();
+const webPluginEnabler = new WebPluginEnabler({
+    tracerProvider: webTracer
 });
+webPluginEnabler.enable([new DocumentLoad()]);
+console.log('hi')
+
 const collectorOptions = {
   url: collectorURL,
 };
 const exporter = new CollectorExporter(collectorOptions);
 webTracer.addSpanProcessor(new SimpleSpanProcessor(exporter));
-
+webTracer.register();
 
 
 // Minimum required setup for the tracer - supports only synchronous operations
-const provider = new WebTracerProvider({
-    plugins: [
-        new DocumentLoad()
-    ]
-});
+// const provider = new WebTracerProvider({
+//     plugins: [
+//         new DocumentLoad()
+//     ]
+// });
 
-provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
-provider.register();
+// provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+// provider.register();
 
 opentelemetry.trace.setGlobalTracerProvider(webTracer);
 const tracer = opentelemetry.trace.getTracer('basic');
