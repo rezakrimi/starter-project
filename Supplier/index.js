@@ -1,5 +1,5 @@
 const opentelemetry = require('@opentelemetry/api');
-const { NodeTracerProvider } = require('@opentelemetry/node');
+const { NodeTracerProvider, NodePluginManager } = require('@opentelemetry/node');
 const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
 const { TraceExporter } = require('@google-cloud/opentelemetry-cloud-trace-exporter');
 const { globalStats, MeasureUnit, AggregationType } = require('@opencensus/core');
@@ -10,6 +10,16 @@ const { LogLevel } = require('@opentelemetry/core');
 const provider = new NodeTracerProvider({
     logLevel: LogLevel.INFO
   });
+const pluginManager = new NodePluginManager({
+    tracerProvider: provider,
+    plugins: {
+        express: {
+          enabled: true,
+          // You may use a package name or absolute path to the file.
+          path: '@opentelemetry/plugin-express',
+        }
+      }
+});
 const express = require('express');
 const app = express();
 const cors = require('cors');

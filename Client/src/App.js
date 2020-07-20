@@ -4,9 +4,10 @@ import { Container, Col, Row, Form, Button, Card } from 'react-bootstrap';
 import axios from 'axios';
 import { tracing } from '@opencensus/web-instrumentation-zone';
 import { ConsoleSpanExporter, SimpleSpanProcessor } from '@opentelemetry/tracing';
-import { WebTracerProvider, WebPluginEnabler } from '@opentelemetry/web';
+import { WebTracerProvider, WebPluginManager } from '@opentelemetry/web';
 import { DocumentLoad } from '@opentelemetry/plugin-document-load';
 import { CollectorExporter } from '@opentelemetry/exporter-collector';
+import { LogLevel } from '@opentelemetry/core';
 const opentelemetry = require('@opentelemetry/api');
 
 
@@ -20,10 +21,11 @@ const collectorURL = `${process.env.REACT_APP_OT_COLLECTOR}/v1/trace`;
 // const collectorURL = 'http://35.188.162.236/v1/trace';
 
 const webTracer = new WebTracerProvider();
-const webPluginEnabler = new WebPluginEnabler({
-    tracerProvider: webTracer
+const webPluginManager = new WebPluginManager({
+    tracerProvider: webTracer,
+    logLevel: LogLevel.DEBUG,
+    plugins: [new DocumentLoad()]
 });
-webPluginEnabler.enable([new DocumentLoad()]);
 console.log('hi')
 
 const collectorOptions = {
