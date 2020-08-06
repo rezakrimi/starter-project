@@ -6,8 +6,11 @@ import { tracing } from '@opencensus/web-instrumentation-zone';
 import { ConsoleSpanExporter, SimpleSpanProcessor } from '@opentelemetry/tracing';
 import { WebTracerProvider, WebPluginManager } from '@opentelemetry/web';
 import { DocumentLoad } from '@opentelemetry/plugin-document-load';
-import { CollectorExporter } from '@opentelemetry/exporter-collector';
-import { LogLevel } from '@opentelemetry/core';
+import { CollectorTraceExporter, CollectorMetricExporter } from '@opentelemetry/exporter-collector';
+import { LogLevel, ConsoleLogger } from '@opentelemetry/core';
+import { MeterProvider, ConsoleMetricExporter } from '@opentelemetry/metrics'
+import { XMLHttpRequestPlugin } from '@opentelemetry/plugin-xml-http-request';
+
 const opentelemetry = require('@opentelemetry/api');
 
 
@@ -18,20 +21,38 @@ require('dotenv').config()
 // Edit this to point to the app to the OpenTelemetry Collector address:
 // If running locally use http://localhost:55678/v1/trace
 const collectorURL = `${process.env.REACT_APP_OT_COLLECTOR}/v1/trace`;
-// const collectorURL = 'http://35.188.162.236/v1/trace';
+const metricURL = `${process.env.REACT_APP_OT_COLLECTOR}/v1/metrics`;
+const labels = {pid: `${process.pid}`};
 
 const webTracer = new WebTracerProvider();
+const myMeterProvider = new MeterProvider({
+    exporter: new CollectorMetricExporter({url: metricURL, logger: new ConsoleLogger(LogLevel.DEBUG)}),
+    // exporter: new ConsoleMetricExporter(),
+    interval: 10000
+});
+
+const meter = myMeterProvider.getMeter("prom");
+
+  // Monotonic counters can only be increased.
+  const errorCount = meter.createCounter('NewBrowserError', {
+    monotonic: true,
+    labelKeys: ['pid'],
+    description: 'Counts the number of errors',
+});
+
+
 const webPluginManager = new WebPluginManager({
     tracerProvider: webTracer,
+    meterProvider: myMeterProvider,
     logLevel: LogLevel.DEBUG,
-    plugins: [new DocumentLoad()]
+    plugins: [new DocumentLoad(), new XMLHttpRequestPlugin({
+      })]
 });
-console.log('hi')
 
 const collectorOptions = {
   url: collectorURL,
 };
-const exporter = new CollectorExporter(collectorOptions);
+const exporter = new CollectorTraceExporter(collectorOptions);
 webTracer.addSpanProcessor(new SimpleSpanProcessor(exporter));
 webTracer.register();
 
@@ -59,6 +80,7 @@ function App() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        errorCount.bind(labels).add(1);
         console.log(document.getElementById("searchbar").value);
         // opentelemetry: starting span to trace the whole process of getting quantity and price for an ingredient
         const searchSpan = tracer.startSpan('Opentelemetry: finding vendors selling the ingredient');

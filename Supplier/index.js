@@ -71,17 +71,17 @@ const error_count = meter.createCounter('error_count', {
     description: 'Counts the number of errors',
 });
 
-const latencyObserver = meter.createObserver('latency', {
-    monotonic: false,
-    labelKeys: ['pid'],
-    description: 'Example of a observer',
-});
+// const latencyObserver = meter.createObserver('latency', {
+//     monotonic: false,
+//     labelKeys: ['pid'],
+//     description: 'Example of a observer',
+// });
 
-const latency = new MetricObservable();
+// const latency = new MetricObservable();
 
-latencyObserver.setCallback((observerResult) => {
-    observerResult.observe(latency, { pid: process.pid.toString() });
-});
+// latencyObserver.setCallback((observerResult) => {
+//     observerResult.observe(latency, { pid: process.pid.toString() });
+// });
 
 const db = {
     "yeast": ["vendorA", "vendorB"],
@@ -111,7 +111,7 @@ app.get('/', (req, res) => {
     setTimeout(function () {
         res.send(db[req.query.ingredient]);
         span.end();
-        latency.next(artificialLatency);
+        // latency.next(artificialLatency);
     }, artificialLatency);
 
 });
